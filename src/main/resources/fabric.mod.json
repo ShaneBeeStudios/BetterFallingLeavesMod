@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "betterfallingleaves",
+	"version": "${version}",
+	"name": "BetterFallingLeaves",
+	"description": "This mod makes for better falling leaves!",
+	"authors": [
+		"ShaneBee"
+	],
+	"contact": {
+		"homepage": "https://github.com/ShaneBeeStudios/BetterFallingLeavesMod",
+		"sources": "https://github.com/ShaneBeeStudios/BetterFallingLeavesMod",
+		"issues": "https://github.com/ShaneBeeStudios/BetterFallingLeavesMod/issues"
+	},
+	"license": "MIT",
+	"icon": "assets/betterfallingleaves/icon.png",
+	"environment": "client",
+	"entrypoints": {
+		"main": [
+			"com.shanebeestudios.betterleaves.BetterFallingLeaves"
+		]
+	},
+	"mixins": [
+		"betterfallingleaves.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.10",
+		"minecraft": "~1.21.5",
+		"java": ">=21"
+	}
+}
