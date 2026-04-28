@@ -14,7 +14,8 @@ import org.lwjgl.glfw.GLFW;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SuppressWarnings({"unused", "FieldCanBeLocal"})
+import java.awt.Color;
+
 public class BetterFallingLeaves implements ClientModInitializer {
 
 	public static final String MOD_ID = "betterfallingleaves";
@@ -24,43 +25,46 @@ public class BetterFallingLeaves implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		LOGGER.info("Time for better falling leaves!");
-		registerKeybind();
+		registerKeybinds();
 	}
 
-	private static KeyMapping gamemodeSwitchKeybind;
-	private static KeyMapping betterFallingKeybind;
-	private static KeyMapping.Category CATEGORY;
-
-	private static void registerKeybind() {
-		CATEGORY = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "title"));
-		gamemodeSwitchKeybind = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+	private static void registerKeybinds() {
+		KeyMapping.Category category = KeyMapping.Category.register(Identifier.fromNamespaceAndPath(MOD_ID, "title"));
+		KeyMapping gamemodeKeybind = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 			"key.betterfallingleaves.gamemode_change",
 			InputConstants.Type.KEYSYM,
-			GLFW.GLFW_KEY_O, CATEGORY));
+			GLFW.GLFW_KEY_O, category));
 
-		betterFallingKeybind = KeyMappingHelper.registerKeyMapping(new KeyMapping(
+		KeyMapping leavesKeybind = KeyMappingHelper.registerKeyMapping(new KeyMapping(
 			"key.betterfallingleaves.better_leaves",
 			InputConstants.Type.KEYSYM,
-			GLFW.GLFW_KEY_M, CATEGORY));
+			GLFW.GLFW_KEY_M, category));
 
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			LocalPlayer player = client.player;
 			assert player != null;
-			if (gamemodeSwitchKeybind.consumeClick()) {
-				GameType playerMode = player.gameMode();
-				ServerboundChangeGameModePacket packet = new ServerboundChangeGameModePacket(
-					playerMode == GameType.CREATIVE ? GameType.SURVIVAL : GameType.CREATIVE);
+			if (gamemodeKeybind.consumeClick()) {
+				GameType previousMode = player.gameMode();
+
+				GameType newMode = previousMode == GameType.CREATIVE ? GameType.SURVIVAL : GameType.CREATIVE;
+				if (player.isCrouching()) {
+					newMode = GameType.SPECTATOR;
+				}
+				ServerboundChangeGameModePacket packet = new ServerboundChangeGameModePacket(newMode);
 				player.connection.send(packet);
 			}
-			if (betterFallingKeybind.consumeClick()) {
+			if (leavesKeybind.consumeClick()) {
 				if (IS_BETTER_FALLING_LEAVES) {
 					IS_BETTER_FALLING_LEAVES = false;
-					player.sendSystemMessage(Component.literal("Better Falling Leaves toggled off!"));
+					player.sendSystemMessage(Component.literal("Better Falling Leaves toggled off!")
+						.withColor(new Color(196, 7, 7).getRGB()));
 				} else {
 					IS_BETTER_FALLING_LEAVES = true;
-					player.sendSystemMessage(Component.literal("Better Falling Leaves toggled on!"));
+					player.sendSystemMessage(Component.literal("Better Falling Leaves toggled on!")
+						.withColor(new Color(71, 201, 8).getRGB()));
 				}
 			}
 		});
 	}
+
 }
