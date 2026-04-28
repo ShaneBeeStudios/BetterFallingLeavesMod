@@ -16,7 +16,7 @@
 	"icon": "assets/betterfallingleaves/icon.png",
 	"environment": "client",
 	"entrypoints": {
-		"main": [
+		"client": [
 			"com.shanebeestudios.betterleaves.BetterFallingLeaves"
 		]
 	},
