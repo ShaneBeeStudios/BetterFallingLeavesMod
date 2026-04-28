@@ -39,7 +39,7 @@ tasks.processResources {
     inputs.property("version", version)
 
     filesMatching("fabric.mod.json") {
-        expand("version" to version)
+        expand("version" to "${version}-${minecraftVersion}")
     }
 }
 
@@ -59,6 +59,7 @@ java {
 
 tasks.jar {
     inputs.property("archivesName", base.archivesName)
+    archiveFileName.set("BetterFallingLeaves-${version}-${minecraftVersion}.jar")
 
     from("LICENSE") {
         rename { "${it}_${base.archivesName.get()}" }
