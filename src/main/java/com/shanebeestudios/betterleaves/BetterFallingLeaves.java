@@ -47,7 +47,7 @@ public class BetterFallingLeaves implements ClientModInitializer {
                 GameType previousMode = player.gameMode();
 
                 GameType newMode = previousMode == GameType.CREATIVE ? GameType.SURVIVAL : GameType.CREATIVE;
-                if (player.isCrouching()) {
+                if (player.input.keyPresses.shift()) {
                     newMode = GameType.SPECTATOR;
                 }
                 ServerboundChangeGameModePacket packet = new ServerboundChangeGameModePacket(newMode);
